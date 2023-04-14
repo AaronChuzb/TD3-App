@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-04-13 17:27:57
  * @LastEditors: AaronChu
- * @LastEditTime: 2023-04-14 16:01:36
+ * @LastEditTime: 2023-04-15 00:22:17
  */
 #include "Home.h"
 
@@ -194,6 +194,30 @@ static void btn_start_event_handler(lv_event_t * e)
     lv_anim_timeline_start(anim_timeline);
 }
 
+void my_anim_ready_cb(lv_anim_t * anim)
+{
+  obj1 = lv_obj_create(Home.PageContent);
+  lv_obj_set_size(obj1, 0, 0);
+
+  obj2 = lv_obj_create(Home.PageContent);
+  lv_obj_set_size(obj2, 0, 0);
+
+  obj3 = lv_obj_create(Home.PageContent);
+  lv_obj_set_size(obj3, 0, 0);
+
+  obj4 = lv_obj_create(Home.PageContent);
+  lv_obj_set_size(obj4, 0, 0);
+
+  obj5 = lv_obj_create(Home.PageContent);
+  lv_obj_set_size(obj5, 0, 0);
+
+  obj6 = lv_obj_create(Home.PageContent);
+  lv_obj_set_size(obj6, 0, 0);
+
+  anim_timeline_create();
+  lv_anim_timeline_start(anim_timeline);
+}
+
 static void Created()
 {
   Home.PageContent = create_new_screen();
@@ -223,34 +247,17 @@ static void Created()
   lv_obj_set_flex_flow(Home.PageContent, LV_FLEX_FLOW_ROW_WRAP);
   lv_obj_set_flex_align(Home.PageContent, LV_FLEX_ALIGN_SPACE_AROUND, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 
-  // lv_anim_t a;
-  // lv_anim_init(&a);
-  // lv_anim_set_var(&a, Home.PageContent);
-  // lv_anim_set_values(&a, SDL_HOR_RES, 0);
-  // lv_anim_set_time(&a, 800);
-  // lv_anim_set_exec_cb(&a, anim_x_cb);
-  // lv_anim_set_path_cb(&a, lv_anim_path_linear);
-  // lv_anim_start(&a);
+  lv_anim_t a;
+  lv_anim_init(&a);
+  lv_anim_set_var(&a, Home.PageContent);
+  lv_anim_set_values(&a, LV_HOR_RES, 0);
+  lv_anim_set_time(&a, 300);
+  lv_anim_set_exec_cb(&a, anim_x_cb);
+  lv_anim_set_path_cb(&a, lv_anim_path_linear);
+  lv_anim_set_ready_cb(&a, my_anim_ready_cb);
+  lv_anim_start(&a);
 
-  obj1 = lv_obj_create(Home.PageContent);
-  lv_obj_set_size(obj1, obj_width, obj_height);
-
-  obj2 = lv_obj_create(Home.PageContent);
-  lv_obj_set_size(obj2, obj_width, obj_height);
-
-  obj3 = lv_obj_create(Home.PageContent);
-  lv_obj_set_size(obj3, obj_width, obj_height);
-
-  obj4 = lv_obj_create(Home.PageContent);
-  lv_obj_set_size(obj4, obj_width, obj_height);
-
-  obj5 = lv_obj_create(Home.PageContent);
-  lv_obj_set_size(obj5, obj_width, obj_height);
-
-  obj6 = lv_obj_create(Home.PageContent);
-  lv_obj_set_size(obj6, obj_width, obj_height);
-
-  anim_timeline_create();
+  
   // lv_anim_timeline_set_reverse(anim_timeline, false);
   // lv_anim_timeline_start(anim_timeline);
 }

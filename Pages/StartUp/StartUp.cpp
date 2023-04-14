@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-04-13 15:09:32
  * @LastEditors: AaronChu
- * @LastEditTime: 2023-04-14 13:50:51
+ * @LastEditTime: 2023-04-15 00:26:15
  */
 #include "StartUp.h"
 
@@ -52,12 +52,12 @@ static void Destroy(void)
   lv_anim_init(&a);
   lv_anim_set_var(&a, StartUp.PageContent);
   lv_anim_set_values(&a, lv_obj_get_x(StartUp.PageContent), -lv_obj_get_width(StartUp.PageContent));
-  lv_anim_set_time(&a, 800);
+  lv_anim_set_time(&a, 300);
   lv_anim_set_exec_cb(&a, anim_x_cb);
   lv_anim_set_path_cb(&a, lv_anim_path_linear);
   lv_anim_start(&a);
   // 动画结束后删除对象
-  lv_obj_del_delayed(StartUp.PageContent, 800);
+  lv_obj_del_delayed(StartUp.PageContent, 300);
   // lv_obj_clean(StartUp.PageContent);
   // lv_obj_del(StartUp.PageContent);
 }
