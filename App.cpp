@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-04-13 15:07:38
  * @LastEditors: AaronChu
- * @LastEditTime: 2023-04-13 17:37:05
+ * @LastEditTime: 2023-04-14 09:38:13
  */
 #include "App.h"
 
@@ -16,6 +16,7 @@ void style_init(void)
   lv_style_set_radius(&page_style, 0);
   lv_style_set_pad_all(&page_style, 0);
   lv_style_set_border_side(&page_style, LV_BORDER_SIDE_NONE);
+  
 }
 
 void App_Init()
@@ -23,9 +24,11 @@ void App_Init()
 
   style_init();
   page_obj_content = lv_obj_create(NULL);
+  lv_obj_set_size(page_obj_content, SDL_HOR_RES, SDL_VER_RES);
   lv_obj_add_style(page_obj_content, &page_style, 0);
   lv_scr_load(page_obj_content);
   PageManager.Page_Init(10);
+  // 状态栏初始化
   StartUp_Init();
   Home_Init();
   PageManager.Page_Push("StartUp");
@@ -45,6 +48,6 @@ lv_obj_t *create_new_screen(void)
 {
   lv_obj_t *main_obj = lv_obj_create(page_obj_content);
   lv_obj_clean(main_obj);
-  lv_obj_set_size(main_obj, 150, 300); // 根据个人屏幕大小修改
+  lv_obj_set_size(main_obj, 240, 300); // 根据个人屏幕大小修改
   return main_obj;
 }

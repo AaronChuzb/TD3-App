@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-04-13 17:27:57
  * @LastEditors: AaronChu
- * @LastEditTime: 2023-04-13 17:53:52
+ * @LastEditTime: 2023-04-14 09:37:00
  */
 #include "Home.h"
 
@@ -18,9 +18,16 @@ static void event_btn1_handler(lv_event_t *e)
   }
 }
 
+static void anim_x_cb(void *var, int32_t v)
+{
+  lv_obj_set_x((_lv_obj_t *)var, v);
+  // lv_obj_set_width(Home.PageContent, SDL_HOR_RES - v);
+}
+
 static void Created()
 {
   Home.PageContent = create_new_screen();
+  // lv_obj_set_width(Home.PageContent, 0);
 
   lv_obj_t *block_obj = lv_obj_create(Home.PageContent);
   lv_obj_set_style_bg_color(block_obj, lv_color_hex(0x000000), LV_STATE_DEFAULT);
@@ -33,6 +40,15 @@ static void Created()
 
   lv_obj_t *label = lv_label_create(btn1); /*btn1内创建label*/
   lv_label_set_text(label, "Go Back");
+
+  lv_anim_t a;
+  lv_anim_init(&a);
+  lv_anim_set_var(&a, Home.PageContent);
+  lv_anim_set_values(&a, SDL_HOR_RES, 0);
+  lv_anim_set_time(&a, 800);
+  lv_anim_set_exec_cb(&a, anim_x_cb);
+  lv_anim_set_path_cb(&a, lv_anim_path_linear);
+  lv_anim_start(&a);
 }
 
 static void Update(void)
