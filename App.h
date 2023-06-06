@@ -13,6 +13,6 @@
 
 extern Page PageManager;
 void App_Init();
-lv_obj_t *create_new_screen(void);
+// lv_obj_t *create_new_screen(void);
 
 #endif

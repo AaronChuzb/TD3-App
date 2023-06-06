@@ -1,11 +1,12 @@
 /*
  * @Date: 2023-04-13 17:27:57
  * @LastEditors: AaronChu
- * @LastEditTime: 2023-04-15 00:22:17
+ * @LastEditTime: 2023-06-06 23:24:48
  */
 #include "Home.h"
 
 Page::PageType Home;
+Page *Home_Manager;
 
 static void event_btn1_handler(lv_event_t *e)
 {
@@ -14,7 +15,7 @@ static void event_btn1_handler(lv_event_t *e)
   { // 点击事件
     lv_obj_clean(Home.PageContent);
     lv_obj_del(Home.PageContent);
-    PageManager.Page_Back(1);
+    Home_Manager->Page_Back(1);
   }
 }
 
@@ -245,7 +246,7 @@ static void Created()
   lv_label_set_text(label2, "test");
 
   lv_obj_set_flex_flow(Home.PageContent, LV_FLEX_FLOW_ROW_WRAP);
-  lv_obj_set_flex_align(Home.PageContent, LV_FLEX_ALIGN_SPACE_AROUND, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+  lv_obj_set_flex_align(Home.PageContent, LV_FLEX_ALIGN_SPACE_AROUND, LV_FLEX_ALIGN_END, LV_FLEX_ALIGN_CENTER);
 
   lv_anim_t a;
   lv_anim_init(&a);
@@ -274,17 +275,17 @@ static void Method(void *btn, int event)
 {
 }
 
-void Home_Init()
+void Home_Init(Page *PageManager)
 {
   strcpy(Home.name, "Home");
-
   Home.BeforeEnter = NULL;
   Home.Created = Created;
   Home.Update = Update;
   Home.Destroy = Destroy;
   Home.Method = Method;
-  if (PageManager.Page_Register(Home))
+  Home_Manager = PageManager;
+  if (Home_Manager->Page_Register(Home))
   {
-    // setstatus("Home", Home.PageContent);
+    
   }
 }
