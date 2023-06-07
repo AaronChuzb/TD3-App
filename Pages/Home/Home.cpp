@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-04-13 17:27:57
  * @LastEditors: AaronChu
- * @LastEditTime: 2023-06-06 23:24:48
+ * @LastEditTime: 2023-06-07 17:07:48
  */
 #include "Home.h"
 
@@ -13,8 +13,6 @@ static void event_btn1_handler(lv_event_t *e)
   lv_event_code_t code = lv_event_get_code(e); // 获取回调事件
   if (code == LV_EVENT_CLICKED)
   { // 点击事件
-    lv_obj_clean(Home.PageContent);
-    lv_obj_del(Home.PageContent);
     Home_Manager->Page_Back(1);
   }
 }
@@ -221,7 +219,7 @@ void my_anim_ready_cb(lv_anim_t * anim)
 
 static void Created()
 {
-  Home.PageContent = create_new_screen();
+  Home.PageContent = create_new_screen(true);
 
   // lv_obj_t *block_obj = lv_obj_create(Home.PageContent);
   // lv_obj_set_style_bg_color(block_obj, lv_color_hex(0x000000), LV_STATE_DEFAULT);
@@ -248,19 +246,21 @@ static void Created()
   lv_obj_set_flex_flow(Home.PageContent, LV_FLEX_FLOW_ROW_WRAP);
   lv_obj_set_flex_align(Home.PageContent, LV_FLEX_ALIGN_SPACE_AROUND, LV_FLEX_ALIGN_END, LV_FLEX_ALIGN_CENTER);
 
-  lv_anim_t a;
-  lv_anim_init(&a);
-  lv_anim_set_var(&a, Home.PageContent);
-  lv_anim_set_values(&a, LV_HOR_RES, 0);
-  lv_anim_set_time(&a, 300);
-  lv_anim_set_exec_cb(&a, anim_x_cb);
-  lv_anim_set_path_cb(&a, lv_anim_path_linear);
-  lv_anim_set_ready_cb(&a, my_anim_ready_cb);
-  lv_anim_start(&a);
+  // lv_anim_t a;
+  // lv_anim_init(&a);
+  // lv_anim_set_var(&a, Home.PageContent);
+  // lv_anim_set_values(&a, LV_HOR_RES, 0);
+  // lv_anim_set_time(&a, 300);
+  // lv_anim_set_exec_cb(&a, anim_x_cb);
+  // lv_anim_set_path_cb(&a, lv_anim_path_linear);
+  // lv_anim_set_ready_cb(&a, my_anim_ready_cb);
+  // lv_anim_start(&a);
+  // Home_Manager->Animation_Right_In(Home);
 
   
   // lv_anim_timeline_set_reverse(anim_timeline, false);
   // lv_anim_timeline_start(anim_timeline);
+
 }
 
 static void Update(void)
@@ -269,6 +269,7 @@ static void Update(void)
 
 static void Destroy(void)
 {
+  lv_obj_del_delayed(Home.PageContent, 0);
 }
 
 static void Method(void *btn, int event)
@@ -284,8 +285,5 @@ void Home_Init(Page *PageManager)
   Home.Destroy = Destroy;
   Home.Method = Method;
   Home_Manager = PageManager;
-  if (Home_Manager->Page_Register(Home))
-  {
-    
-  }
+  Home_Manager->Page_Register(Home);
 }

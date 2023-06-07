@@ -7,7 +7,7 @@
 #include "../lvgl/lvgl.h"
 #endif
 
-lv_obj_t *create_new_screen(void);
+lv_obj_t *create_new_screen(bool hasStatusBar);
 
 
 class Page
@@ -33,6 +33,10 @@ public:
   bool Page_Push(char *name);             // 页面跳转
   bool Page_Back(uint16_t delt);          // 返回页数
   void Destroy_Animation(Page::PageType page);
+  void Animation_Left_Out(Page::PageType page); // 从右向左退出
+  void Animation_Right_In(Page::PageType page); // 从右向左进入
+  void Animation_Left_In(Page::PageType page);  // 从左向右进入
+  void Animation_Right_Out(Page::PageType page);// 从左向右退出
 private:
   PageType PageList[10];  // 页面列表
   PageType PageStack[10]; // 页面堆栈

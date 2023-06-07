@@ -4,7 +4,6 @@ lv_obj_t *main_win;
 lv_style_t page_style;
 lv_style_t content_style;
 
-
 // 页面总样式初始化
 void style_init(void)
 {
@@ -20,18 +19,15 @@ void style_init(void)
   lv_style_set_border_side(&content_style, LV_BORDER_SIDE_NONE);
 }
 
-
 // 横向动画函数
 static void anim_x_cb(void *var, int32_t v)
 {
   lv_obj_set_x((_lv_obj_t *)var, v);
 }
 
-
-
-
-// 销毁动画
-void Page::Destroy_Animation(PageType page){
+// 从右向左退出
+void Page::Animation_Left_Out(PageType page)
+{
   lv_anim_t a;
   lv_anim_init(&a);
   lv_anim_set_var(&a, page.PageContent);
@@ -41,19 +37,58 @@ void Page::Destroy_Animation(PageType page){
   lv_anim_set_path_cb(&a, lv_anim_path_linear);
   lv_anim_start(&a);
 }
-
-lv_obj_t *create_new_screen(void)
+// 从右向左进入
+void Page::Animation_Right_In(PageType page)
 {
-
-  lv_obj_t *content = lv_obj_create(main_win);
-  lv_obj_clean(content);
-  lv_obj_set_size(content, LV_HOR_RES, LV_VER_RES - 20); // 根据个人屏幕大小修改
-  lv_obj_set_pos(content, 0, 20);                        // 根据个人屏幕大小修改
-  lv_obj_add_style(content, &content_style, 0);
-
-  return content;
+  lv_anim_t a;
+  lv_anim_init(&a);
+  lv_anim_set_var(&a, page.PageContent);
+  lv_anim_set_values(&a, LV_HOR_RES, 0);
+  lv_anim_set_time(&a, 300);
+  lv_anim_set_exec_cb(&a, anim_x_cb);
+  lv_anim_set_path_cb(&a, lv_anim_path_linear);
+  lv_anim_start(&a);
+}
+// 从左向右进入
+void Page::Animation_Left_In(PageType page)
+{
+  lv_anim_t a;
+  lv_anim_init(&a);
+  lv_anim_set_var(&a, page.PageContent);
+  lv_anim_set_values(&a, 0, 300);
+  lv_anim_set_time(&a, 300);
+  lv_anim_set_exec_cb(&a, anim_x_cb);
+  lv_anim_set_path_cb(&a, lv_anim_path_linear);
+  lv_anim_start(&a);
+}
+// 从左向右退出
+void Page::Animation_Right_Out(PageType page)
+{
+  lv_anim_t a;
+  lv_anim_init(&a);
+  lv_anim_set_var(&a, page.PageContent);
+  lv_anim_set_values(&a, 0, lv_obj_get_width(page.PageContent));
+  lv_anim_set_time(&a, 300);
+  lv_anim_set_exec_cb(&a, anim_x_cb);
+  lv_anim_set_path_cb(&a, lv_anim_path_linear);
+  lv_anim_start(&a);
 }
 
+lv_obj_t *create_new_screen(bool hasStatusBar)
+{
+  
+  lv_obj_t *content = lv_obj_create(main_win);
+  lv_obj_clean(content);
+  if(hasStatusBar){
+    lv_obj_set_size(content, LV_HOR_RES, LV_VER_RES - 20); // 根据个人屏幕大小修改
+    lv_obj_set_pos(content, 0, 20); 
+  } else {
+    lv_obj_set_size(content, LV_HOR_RES, LV_VER_RES); // 根据个人屏幕大小修改
+    lv_obj_set_pos(content, 0, 0); 
+  }
+  lv_obj_add_style(content, &content_style, 0);
+  return content;
+}
 
 uint16_t page_index = 0;
 
@@ -107,13 +142,12 @@ void Page::Page_Init(uint16_t lenPages)
   lv_label_set_text(label_batchar, LV_SYMBOL_CHARGE);
   lv_obj_center(label_batchar);
 
-
   PageNum = lenPages;
   PageList[lenPages];
   PageStack[lenPages];
   // 初始化默认页面
-  cur_page.Created  = NULL;
-
+  cur_page.Created = NULL;
+  cur_page.Destroy = NULL;
   StackTop = 0;
 }
 
@@ -129,18 +163,13 @@ bool Page::Page_Register(PageType Page)
 bool Page::Page_Push(char *name)
 {
   PageType page;
+  // 在路由表中查找改页面，未找到跳转失败。
   for (int i = 0; i < PageNum; i++)
   {
-    
     if (strcmp(PageList[i].name, name) == 0)
     {
-      // PageList[0].Created();
       page = PageList[i];
-      // page.Created();
-    }
-    else
-    {
-     
+      break;
     }
   }
   // 防止堆栈溢出
@@ -151,9 +180,16 @@ bool Page::Page_Push(char *name)
   StackTop++;
   PageStack[StackTop] = page;
   new_page = PageStack[StackTop];
-  old_page  = cur_page;
+  old_page = cur_page;
   cur_page = new_page;
+  if(old_page.Destroy != NULL){
+    old_page.Destroy();
+  }
   cur_page.Created();
+  // if(old_page.PageContent){
+  //   Animation_Left_Out(old_page);
+  // }
+  // Animation_Right_In(cur_page);
   
 }
 
@@ -171,5 +207,10 @@ bool Page::Page_Back(uint16_t delt)
   }
   old_page = cur_page;
   cur_page = PageStack[StackTop];
+  if(old_page.Destroy != NULL){
+    old_page.Destroy();
+  }
   cur_page.Created();
+  // Animation_Right_Out(old_page);
+  // Animation_Left_In(page);
 }

@@ -1,10 +1,10 @@
 /*
  * @Date: 2023-04-13 15:09:32
  * @LastEditors: AaronChu
- * @LastEditTime: 2023-06-06 23:24:17
+ * @LastEditTime: 2023-06-07 17:07:56
  */
 #include "StartUp.h"
-#include "HAL/HAL.h"
+// #include "HAL/HAL.h"
 
 Page::PageType StartUp;
 Page *Start_Manager;
@@ -20,9 +20,8 @@ static void event_btn1_handler(lv_event_t *e)
   lv_event_code_t code = lv_event_get_code(e); // 获取回调事件
   if (code == LV_EVENT_CLICKED)
   { // 点击事件
-
-    StartUp.Destroy();
     Start_Manager->Page_Push("Home");
+    
   }
 }
 
@@ -32,10 +31,10 @@ static void bt14_handler(lv_event_t *e)
   if (code == LV_EVENT_CLICKED)
   { // 点击事件
     if(light1){
-      digitalWrite(14, 0);
+      // digitalWrite(14, 0);
       light1 = false;
     } else {
-      digitalWrite(14, 1);
+      // digitalWrite(14, 1);
       light1 = true;
     }
   }
@@ -47,10 +46,10 @@ static void bt13_handler(lv_event_t *e)
   if (code == LV_EVENT_CLICKED)
   { // 点击事件
     if(light2){
-      digitalWrite(13, 0);
+      // digitalWrite(13, 0);
       light2 = false;
     } else {
-      digitalWrite(13, 1);
+      // digitalWrite(13, 1);
       light2 = true;
     }
   }
@@ -62,10 +61,10 @@ static void bt12_handler(lv_event_t *e)
   if (code == LV_EVENT_CLICKED)
   { // 点击事件
     if(light3){
-      digitalWrite(12, 0);
+      // digitalWrite(12, 0);
       light3 = false;
     } else {
-      digitalWrite(12, 1);
+      // digitalWrite(12, 1);
       light3 = true;
     }
   }
@@ -77,10 +76,10 @@ static void bt11_handler(lv_event_t *e)
   if (code == LV_EVENT_CLICKED)
   { // 点击事件
     if(light4){
-      digitalWrite(11, 0);
+      // digitalWrite(11, 0);
       light4 = false;
     } else {
-      digitalWrite(11, 1);
+      // digitalWrite(11, 1);
       light4 = true;
     }
   }
@@ -92,10 +91,10 @@ static void beep_handler(lv_event_t *e)
   if (code == LV_EVENT_CLICKED)
   { // 点击事件
     if(beep){
-      digitalWrite(4, 0);
+      // digitalWrite(4, 0);
       beep = false;
     } else {
-      digitalWrite(4, 1);
+      // digitalWrite(4, 1);
       beep = true;
     }
   }
@@ -112,7 +111,7 @@ static void anim_x_cb(void *var, int32_t v)
 
 static void Created()
 {
-  StartUp.PageContent = create_new_screen();
+  StartUp.PageContent = create_new_screen(false);
   // lv_obj_t *block_obj = lv_obj_create(StartUp.PageContent);
   // lv_obj_set_style_bg_color(block_obj, lv_color_hex(0xafafaf), LV_STATE_DEFAULT);
   // lv_obj_set_align(block_obj, LV_ALIGN_CENTER);
@@ -175,11 +174,11 @@ static void Destroy(void)
   // lv_anim_set_exec_cb(&a, anim_x_cb);
   // lv_anim_set_path_cb(&a, lv_anim_path_linear);
   // lv_anim_start(&a);
-  Start_Manager->Destroy_Animation(StartUp);
-  // 动画结束后删除对象
-  lv_obj_del_delayed(StartUp.PageContent, 300);
+  // Start_Manager->Destroy_Animation(StartUp);
+  // Start_Manager->Animation_Left_Out(StartUp);
   // lv_obj_clean(StartUp.PageContent);
   // lv_obj_del(StartUp.PageContent);
+  lv_obj_del_delayed(StartUp.PageContent, 0);
 }
 
 static void Method(void *btn, int event)
