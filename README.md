@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-04-13 18:03:10
  * @LastEditors: AaronChu
- * @LastEditTime: 2023-04-13 18:21:38
+ * @LastEditTime: 2023-06-29 15:07:47
 -->
 # 基于LVGL的页面管理框架
 
@@ -56,8 +56,8 @@ build_flags =
   -D LV_CONF_SKIP
   -D LV_CONF_INCLUDE_SIMPLE
   -D LV_CONF_INCLUDE_SIMPLE
-  -D LV_USE_PERF_MONITOR
-  -D LV_USE_MEM_MONITOR
+  ; -D LV_USE_PERF_MONITOR
+  ; -D LV_USE_MEM_MONITOR
   -D LV_DISP_DEF_REFR_PERIOD="10"
   ; Enable LVGL demo, remove when working on your own project
   -D LV_USE_DEMO_WIDGETS=1
@@ -98,44 +98,13 @@ lib_deps =
   ${env.lib_deps}
   ; Use direct URL, because package registry is unstable
   ;lv_drivers@~7.9.0
-  lv_drivers=https://github.com/lvgl/lv_drivers/archive/refs/tags/v8.2.0.zip
+  lv_drivers=https://github.com/lvgl/lv_drivers/archive/refs/tags/v8.3.0.zip
 build_src_filter =
   +<*>
   +<../hal/sdl2>
   ; Force compile LVGL demo, remove when working on your own project
   +<../.pio/libdeps/emulator_64bits/lvgl/demos>
 
-
-[env:emulator_32bits]
-extends = env:emulator_64bits
-build_flags =
-  ${env:emulator_64bits.build_flags}
-  -m32
-build_src_filter =
-  +<*>
-  +<../hal/sdl2>
-  +<../.pio/libdeps/emulator_32bits/lvgl/demos>
-
-[env:stm32f429_disco]
-platform = ststm32@^8.0.0
-board = disco_f429zi
-framework = stm32cube
-build_flags =
-  ${env.build_flags}
-  -D LV_LOG_LEVEL=LV_LOG_LEVEL_NONE
-  ; header's default is 25MHz, but board uses 8MHz crystal
-  -D HSE_VALUE=8000000
-  ; Add recursive dirs for hal headers search
-  !python -c "import os; print(' '.join(['-I {}'.format(i[0].replace('\x5C','/')) for i in os.walk('hal/stm32f429_disco')]))"
-lib_deps =
-  ${env.lib_deps}
-  BSP-ili9341
-  BSP-stmpe811
-; build_src_filter =
-;   +<*>
-;   +<../hal/stm32f429_disco>
-;   ; Force compile LVGL demo, remove when working on your own project
-;   +<../.pio/libdeps/stm32f429_disco/lvgl/demos>
 
 ```
 
