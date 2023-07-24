@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-04-13 15:07:53
  * @LastEditors: AaronChu
- * @LastEditTime: 2023-06-29 14:28:34
+ * @LastEditTime: 2023-07-24 16:33:16
  */
 #ifndef APP_H
 #define APP_H
@@ -10,6 +10,7 @@
 #include "Page.h"
 #include "Pages/StartUp/StartUp.h"
 #include "Pages/Home/Home.h"
+#include "Pages/Ammeter/Ammeter.h"
 
 
 extern Page PageManager;

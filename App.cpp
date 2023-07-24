@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-04-13 15:07:38
  * @LastEditors: AaronChu
- * @LastEditTime: 2023-06-29 14:47:20
+ * @LastEditTime: 2023-07-24 16:41:46
  */
 #include "App.h"
 
@@ -14,6 +14,7 @@ void App_Init()
   // 2. 页面初始化
   StartUp_Init(&PageManager);
   Home_Init(&PageManager);
+  Ammeter_Init(&PageManager);
   /* xxx_Init()
     ... 
     ...
@@ -21,6 +22,6 @@ void App_Init()
     */
 
   // 3. 页面路由跳转
-  PageManager.Page_Replace("StartUp");
+  PageManager.Page_Replace("Ammeter");
 }
 
