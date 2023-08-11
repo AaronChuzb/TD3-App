@@ -2,7 +2,6 @@
 #define PAGE_H
 
 
-
 #ifdef LV_LVGL_H_INCLUDE_SIMPLE
 #include <lvgl.h>
 #else
@@ -21,7 +20,7 @@ public:
   struct PageType // 页面生命周期
   {
     char name[32];         // 页面名称
-    bool show_status_bar;       // 是否显示状态栏
+    int show_status_bar;       // 是否显示状态栏
     lv_obj_t *PageContent;        // 页面对象
     EventHook BeforeEnter; // 独享路由守卫
     EventHook Created;     // 页面创建回调钩子
@@ -35,8 +34,8 @@ public:
   bool Page_Push(char *name);             // 页面跳转
   bool Page_Replace(char *name);          // 页面跳转
   bool Page_Back(uint16_t delt);          // 返回页数
-  lv_obj_t * create_new_screen(void);
-  void Page_StatusBar_Init();
+  lv_obj_t * create_new_screen(int style = 0);
+  // void Page_StatusBar_Init();
 private:
   PageType PageList[10];  // 页面列表
   PageType PageStack[10]; // 页面堆栈

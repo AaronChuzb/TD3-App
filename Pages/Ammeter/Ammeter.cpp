@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-04-13 17:27:57
  * @LastEditors: AaronChu
- * @LastEditTime: 2023-07-24 17:58:31
+ * @LastEditTime: 2023-08-11 23:56:57
  */
 #include "Ammeter.h"
 
@@ -236,7 +236,7 @@ static void Method(void *btn, int event)
 void Ammeter_Init(Page *PageManager)
 {
   strcpy(Ammeter.name, "Ammeter");
-  Ammeter.show_status_bar = true;
+  Ammeter.show_status_bar = 1;
   Ammeter.BeforeEnter = NULL;
   Ammeter.Created = Created;
   Ammeter.Update = Update;

@@ -1,9 +1,11 @@
 /*
  * @Date: 2023-04-13 17:27:57
  * @LastEditors: AaronChu
- * @LastEditTime: 2023-07-24 16:34:30
+ * @LastEditTime: 2023-08-11 21:35:11
  */
 #include "Home.h"
+#include <Arduino.h>
+
 
 Page::PageType Home;
 Page *Home_Manager;
@@ -27,6 +29,9 @@ static void Created()
 
   lv_obj_t *label = lv_label_create(btn1); /*btn1内创建label*/
   lv_label_set_text(label, "ele");
+
+
+
 }
 
 static void Update(void)
@@ -44,7 +49,7 @@ static void Method(void *btn, int event)
 void Home_Init(Page *PageManager)
 {
   strcpy(Home.name, "Home");
-  Home.show_status_bar = true;
+  Home.show_status_bar = 1;
   Home.BeforeEnter = NULL;
   Home.Created = Created;
   Home.Update = Update;

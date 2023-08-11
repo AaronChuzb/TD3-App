@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-04-13 17:27:57
  * @LastEditors: AaronChu
- * @LastEditTime: 2023-06-29 14:58:00
+ * @LastEditTime: 2023-08-11 23:43:07
  */
 #include "StartUp.h"
 
@@ -10,6 +10,7 @@ Page *StartUp_Manager;
 lv_obj_t *progress;
 uint8_t progress_value = 0;
 lv_timer_t *timer;
+
 
 
 // static void event_btn1_handler(lv_event_t *e)
@@ -72,13 +73,13 @@ static void Method(void *btn, int event)
 void StartUp_Init(Page *PageManager)
 {
   strcpy(StartUp.name, "StartUp");
-  StartUp.show_status_bar = false;
+  StartUp.show_status_bar = 0;
   StartUp.BeforeEnter = NULL;
   StartUp.Created = Created;
   StartUp.Update = Update;
   StartUp.Destroy = Destroy;
   StartUp.Method = Method;
-  StartUp.PageContent = PageManager->create_new_screen();
+  StartUp.PageContent = PageManager->create_new_screen(0);
   StartUp_Manager = PageManager;
   PageManager->Page_Register(StartUp);
 }

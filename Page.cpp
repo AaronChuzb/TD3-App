@@ -1,7 +1,10 @@
 ﻿#include "Page.h"
+#include "Arduino.h"
 
 uint16_t page_index = 0;
-lv_style_t page_style;
+
+lv_style_t light_style;
+lv_style_t dark_style;
 
 void my_timer(lv_timer_t *timer)
 {
@@ -10,28 +13,46 @@ void my_timer(lv_timer_t *timer)
   lv_obj_clean((lv_obj_t *)timer->user_data);
 }
 
+
+
+
+
 // 全局样式初始化
 void style_init(void)
 {
-  lv_style_init(&page_style);
-  lv_style_set_bg_color(&page_style, lv_color_hex(0x000000));
-  lv_style_set_radius(&page_style, 0);
-  lv_style_set_pad_all(&page_style, 0);
-  lv_style_set_border_side(&page_style, LV_BORDER_SIDE_NONE);
+  // 暗色主题初始化
+  lv_style_init(&dark_style);
+  lv_style_set_bg_color(&dark_style, lv_color_hex(0x000000));
+  lv_style_set_radius(&dark_style, 0);
+  lv_style_set_pad_all(&dark_style, 0);
+  lv_style_set_border_side(&dark_style, LV_BORDER_SIDE_NONE);
+  // 亮色主题初始化
+  lv_style_init(&light_style);
+  lv_style_set_bg_color(&light_style, lv_color_hex(0xffffff));
+  lv_style_set_radius(&light_style, 0);
+  lv_style_set_pad_all(&light_style, 0);
+  lv_style_set_border_side(&light_style, LV_BORDER_SIDE_NONE);
 }
 
 // 页面对象创建
-lv_obj_t *Page::create_new_screen(void)
+lv_obj_t *Page::create_new_screen(int style)
 {
   lv_obj_t *main_obj = lv_obj_create(NULL);
   lv_obj_clean(main_obj);
   lv_obj_set_size(main_obj, LV_HOR_RES, LV_VER_RES);
-  lv_obj_add_style(main_obj, &page_style, 0);
+  if (style == 1)
+  {
+    lv_obj_add_style(main_obj, &light_style, 0);
+  }
+  else
+  {
+    lv_obj_add_style(main_obj, &dark_style, 0);
+  }
   return main_obj;
 }
 
 // 页面状态栏创建
-void Page::Page_StatusBar_Init()
+void Page_StatusBar_Init(lv_obj_t *pageContent)
 {
   // 状态栏初始化
   static lv_style_t obj_layout_style; // 容器的样式
@@ -42,7 +63,7 @@ void Page::Page_StatusBar_Init()
   lv_style_set_border_side(&obj_layout_style, LV_BORDER_SIDE_NONE);
   lv_style_set_radius(&obj_layout_style, 0);
   lv_style_set_text_color(&obj_layout_style, lv_color_hex(0xffffff));
-  lv_obj_t *panel = lv_obj_create(cur_page.PageContent);
+  lv_obj_t *panel = lv_obj_create(pageContent);
   lv_obj_set_size(panel, 240, 20);
   lv_obj_add_style(panel, &obj_layout_style, 0);
   lv_obj_set_pos(panel, 0, 0);
@@ -115,13 +136,17 @@ bool Page::Page_Push(char *name)
   cur_page = new_page;
 
   // 移除旧页面状态栏
-  
+
   //
   cur_page.Created();
   // lv_scr_load(cur_page.PageContent);
   // 不删除就屏幕对象指针，会导致返回页面空指针异常
+  if (cur_page.show_status_bar == 1)
+  {
+    Page_StatusBar_Init(cur_page.PageContent);
+  }
   lv_scr_load_anim(cur_page.PageContent, LV_SCR_LOAD_ANIM_MOVE_LEFT, 300, 0, false);
-  Page_StatusBar_Init();
+  // Page_StatusBar_Init();
   if (old_page.Destroy != NULL)
   {
     old_page.Destroy();
@@ -152,10 +177,11 @@ bool Page::Page_Replace(char *name)
   old_page = cur_page;
   cur_page = new_page;
   cur_page.Created();
-  lv_scr_load_anim(cur_page.PageContent, LV_SCR_LOAD_ANIM_FADE_ON, 300, 0, true);
-  if(cur_page.show_status_bar){
-    Page_StatusBar_Init();
+  if (cur_page.show_status_bar == 1)
+  {
+    Page_StatusBar_Init(cur_page.PageContent);
   }
+  lv_scr_load_anim(cur_page.PageContent, LV_SCR_LOAD_ANIM_FADE_ON, 300, 0, true);
 }
 
 bool Page::Page_Back(uint16_t delt)
@@ -172,12 +198,12 @@ bool Page::Page_Back(uint16_t delt)
   }
   old_page = cur_page;
   cur_page = PageStack[StackTop];
-
   cur_page.Created();
-  lv_scr_load_anim(cur_page.PageContent, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 300, 0, false);
-  if(cur_page.show_status_bar){
-    Page_StatusBar_Init();
+  if (cur_page.show_status_bar == 1)
+  {
+    Page_StatusBar_Init(cur_page.PageContent);
   }
+  lv_scr_load_anim(cur_page.PageContent, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 300, 0, false);
   if (old_page.Destroy != NULL)
   {
     old_page.Destroy();
